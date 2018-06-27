@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 
 class ProductItem extends Component {
+
+    onDeleteItem = id => {
+        this.props.onDeleteItem(id)
+    }
+
     render() {
         let { index, product } = this.props;
         let productStatus = product.status ? 'in stock' : 'out of stock';
@@ -16,7 +21,15 @@ class ProductItem extends Component {
                 </td>
                 <td>
                     <button type="button" className="btn btn-warning">Edit</button>
-                    <button type="button" className="btn btn-danger ml-4">Delete</button>
+                    <button
+                        type="button"
+                        className="btn btn-danger ml-4"
+                        onClick={() => {
+                            this.onDeleteItem(product.id)
+                        }}
+                    >
+                        Delete
+                    </button>
                 </td>
             </tr>
         )

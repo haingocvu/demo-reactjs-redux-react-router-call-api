@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import callAPI from "./../../utils/apiCaller";
 import * as Endpoints from "./../../constants/endpoints";
+import { findIndex } from 'lodash';
 
 class ProductListPage extends Component {
     constructor(props) {
@@ -39,12 +40,35 @@ class ProductListPage extends Component {
             </div>
         )
     }
+
+    onDeleteItem = id => {
+        let { products } = this.state;
+        //delete on server
+        callAPI('DELETE', `${Endpoints.PRODUCTS}/${id}`)
+            .then(res => {
+                console.log(res);
+                //delete on local
+                if (res.status === 200 || res.status === 201) {
+                    let index = findIndex(products, product => {
+                        return product.id === id
+                    })
+                    if (index !== -1) {
+                        products.splice(index, 1);
+                        this.setState({
+                            products
+                        })
+                    }
+                }
+            })
+            .catch(err => console.log(err))
+    }
+
     showProductItem = products => {
         let rs = null;
         if (products.length) {
             rs = map(products, (product, index) => {
                 return (
-                    <ProductItem key={index} index={index} product={product} />
+                    <ProductItem key={index} index={index} product={product} onDeleteItem={this.onDeleteItem} />
                 )
             })
         }
