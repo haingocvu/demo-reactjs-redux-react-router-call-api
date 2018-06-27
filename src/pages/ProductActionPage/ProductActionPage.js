@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import callAPI from './../../utils/apiCaller';
+import * as Endpoint from "./../../constants/endpoints";
+import { Link } from "react-router-dom";
 
 class ProductActionPage extends Component {
     constructor(props) {
@@ -12,35 +14,60 @@ class ProductActionPage extends Component {
         }
     }
 
+    componentDidMount() {
+        let { match } = this.props;
+        if (match) {
+            let { id } = match.params;
+            //get product info when edit product
+            callAPI('GET', `${Endpoint.PRODUCTS}/${id}`, null)
+                .then(res => {
+                    this.setState({
+                        id: res.data.id,
+                        name: res.data.name,
+                        price: res.data.price,
+                        status: res.data.status
+                    })
+                })
+                .catch(err => console.log(err))
+        }
+    }
+
     handleChange = event => {
         let target = event.target;
         let name = target.name;
         let value = target.type === 'checkbox' ? target.checked : target.value;
-        if (name && (value || value === false)) {
-            this.setState({
-                [name]: value
-            })
-        }
+        this.setState({
+            [name]: value
+        })
     }
 
     handleSubmit = event => {
         event.preventDefault();
         let { history } = this.props;
-        let { name, price, status } = this.state;
+        let { id, name, price, status } = this.state;
         if (name && price && (status || status === false)) {
-            //submit product to backend
-            callAPI('POST', 'products', {
-                name,
-                price,
-                status
-            }).then(data => {
-                history.goBack();
-            }).catch(err => console.log('error'))
+            //check if existsed id, then edit product
+            if (id) {
+                callAPI('PUT', `${Endpoint.PRODUCTS}/${id}`, {
+                    name,
+                    price,
+                    status
+                }).then(res => {
+                    history.goBack()
+                }).catch(err => console.log(err))
+            } else {//otherwise add product to backend
+                callAPI('POST', `${Endpoint.PRODUCTS}`, {
+                    name,
+                    price,
+                    status
+                }).then(data => {
+                    history.goBack();
+                }).catch(err => console.log('error'))
+            }
         }
     }
 
     render() {
-        let { match } = this.props;
         let { name, price, status } = this.state;
         return (
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -77,7 +104,7 @@ class ProductActionPage extends Component {
                                 <input
                                     type="checkbox"
                                     name="status"
-                                    value={status}
+                                    checked={status}
                                     onChange={this.handleChange}
                                 />
                                 in stock
@@ -85,6 +112,7 @@ class ProductActionPage extends Component {
                         </div>
                     </div>
                     <button type="submit" className="btn btn-primary">Submit</button>
+                    <Link to='/product/list' className="btn btn-primary ml-4">Back</Link>
                 </form>
             </div>
         )

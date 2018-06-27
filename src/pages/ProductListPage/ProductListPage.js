@@ -46,7 +46,6 @@ class ProductListPage extends Component {
         //delete on server
         callAPI('DELETE', `${Endpoints.PRODUCTS}/${id}`)
             .then(res => {
-                console.log(res);
                 //delete on local
                 if (res.status === 200 || res.status === 201) {
                     let index = findIndex(products, product => {
