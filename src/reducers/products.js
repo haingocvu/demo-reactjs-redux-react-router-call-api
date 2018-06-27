@@ -6,7 +6,7 @@ let initialState = [
         status: true
     },
     {
-        id: 1,
+        id: 2,
         name: 'Nokia N9',
         price: 12000000,
         status: false

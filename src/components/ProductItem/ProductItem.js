@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 
 class ProductItem extends Component {
     render() {
-        let {index, product} = this.props;
-        let productStatus = product.status?'in stock':'out of stock';
-        let productClass = product.status?'label-warning':'label-success';
+        let { index, product } = this.props;
+        let productStatus = product.status ? 'in stock' : 'out of stock';
+        let productClass = product.status ? 'label-success' : 'label-warning';
         return (
             <tr>
-                <td>{index}</td>
+                <td>{index + 1}</td>
                 <td>{product.id}</td>
                 <td>{product.name}</td>
                 <td>{product.price}</td>
