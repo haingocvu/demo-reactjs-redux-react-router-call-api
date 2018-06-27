@@ -3,7 +3,8 @@ import ProductsList from "./../../components/ProductsList/ProductList";
 import ProductItem from "./../../components/ProductItem/ProductItem";
 import { map } from "lodash";
 import { connect } from "react-redux";
-import Axios from 'axios';
+import callAPI from "./../../utils/apiCaller";
+import * as Endpoints from "./../../constants/endpoints";
 
 class ProductListPage extends Component {
     constructor(props) {
@@ -14,15 +15,15 @@ class ProductListPage extends Component {
     }
 
     componentDidMount() {
-        Axios({
-            method: 'GET',
-            url: 'http://5b30fe687ad3350014b43369.mockapi.io/api/products',
-            data: null
-        }).then(res => {
-            this.setState({
-                products: res.data
+        callAPI('GET', Endpoints.PRODUCTS, null)
+            .then(res => {
+                this.setState({
+                    products: res.data
+                })
             })
-        })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
     render() {
