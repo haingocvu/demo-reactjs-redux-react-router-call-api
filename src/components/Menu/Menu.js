@@ -21,7 +21,6 @@ const CustomLink = ({ label, to, activeWhenOnlyExact }) => (
         exact={activeWhenOnlyExact}
         children={
             ({ match }) => {
-                console.log(match);
                 return (
                     <li className={match ? 'active' : ''}>
                         <Link to={to}>{label}</Link>

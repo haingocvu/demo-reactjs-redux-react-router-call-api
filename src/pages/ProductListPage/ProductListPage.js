@@ -3,6 +3,7 @@ import ProductsList from "./../../components/ProductsList/ProductList";
 import ProductItem from "./../../components/ProductItem/ProductItem";
 import { map } from "lodash";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 import callAPI from "./../../utils/apiCaller";
 import * as Endpoints from "./../../constants/endpoints";
 
@@ -31,7 +32,7 @@ class ProductListPage extends Component {
         let { products } = this.state;
         return (
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <button type="button" className="btn btn-success mb-4">Add Product</button>
+                <Link to="/product/add" className="btn btn-success mb-4">Add Product</Link>
                 <ProductsList>
                     {this.showProductItem(products)}
                 </ProductsList>
