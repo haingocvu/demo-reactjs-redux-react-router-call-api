@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import callAPI from "./../../utils/apiCaller";
 import * as Endpoints from "./../../constants/endpoints";
 import { findIndex } from 'lodash';
+import * as Action from "./../../actions/index";
 
 class ProductListPage extends Component {
     constructor(props) {
@@ -17,20 +18,12 @@ class ProductListPage extends Component {
     }
 
     componentDidMount() {
-        callAPI('GET', Endpoints.PRODUCTS, null)
-            .then(res => {
-                this.setState({
-                    products: res.data
-                })
-            })
-            .catch(err => {
-                console.log(err)
-            })
+        this.props.onFetchProductsToReduxState();
     }
 
     render() {
         //let { products } = this.props;
-        let { products } = this.state;
+        let { products } = this.props;
         return (
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <Link to="/product/add" className="btn btn-success mb-4">Add Product</Link>
@@ -81,4 +74,12 @@ const mapStateToProp = state => {
     }
 }
 
-export default connect(mapStateToProp, null)(ProductListPage);
+const mapDispatchToProp = (dispatch, prop) => {
+    return {
+        onFetchProductsToReduxState: () => {
+            dispatch(Action.actFetchProductRequest())
+        }
+    }
+}
+
+export default connect(mapStateToProp, mapDispatchToProp)(ProductListPage);
