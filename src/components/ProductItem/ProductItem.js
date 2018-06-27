@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 class ProductItem extends Component {
 
     onDeleteItem = id => {
-        this.props.onDeleteItem(id)
+        if (window.confirm('are you sure?')) {
+            this.props.onDeleteItem(id)
+        }
     }
 
     render() {
