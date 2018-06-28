@@ -19,4 +19,21 @@ const actFetchProductRequest = () => {
     }
 }
 
-export { actFetchProduct, actFetchProductRequest };
+const actDeleteProduct = id => {
+    return {
+        type: ActionType.DELETE_PRODUCT,
+        id
+    }
+}
+
+const actDeleteProductRequest = id => {
+    return dispatch => {
+        return callAPI('DELETE', `${Endpoints.PRODUCTS}/${id}`, null)
+            .then(res => {
+                //call dispatch
+                dispatch(actDeleteProduct(id))
+            }).catch(err => console.log(err))
+    }
+}
+
+export { actFetchProductRequest, actDeleteProductRequest };

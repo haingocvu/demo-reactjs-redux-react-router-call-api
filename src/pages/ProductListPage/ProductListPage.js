@@ -4,9 +4,6 @@ import ProductItem from "./../../components/ProductItem/ProductItem";
 import { map } from "lodash";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import callAPI from "./../../utils/apiCaller";
-import * as Endpoints from "./../../constants/endpoints";
-import { findIndex } from 'lodash';
 import * as Action from "./../../actions/index";
 
 class ProductListPage extends Component {
@@ -35,24 +32,7 @@ class ProductListPage extends Component {
     }
 
     onDeleteItem = id => {
-        let { products } = this.state;
-        //delete on server
-        callAPI('DELETE', `${Endpoints.PRODUCTS}/${id}`)
-            .then(res => {
-                //delete on local
-                if (res.status === 200 || res.status === 201) {
-                    let index = findIndex(products, product => {
-                        return product.id === id
-                    })
-                    if (index !== -1) {
-                        products.splice(index, 1);
-                        this.setState({
-                            products
-                        })
-                    }
-                }
-            })
-            .catch(err => console.log(err))
+        this.props.ondeleteProduct(id);
     }
 
     showProductItem = products => {
@@ -78,6 +58,9 @@ const mapDispatchToProp = (dispatch, prop) => {
     return {
         onFetchProductsToReduxState: () => {
             dispatch(Action.actFetchProductRequest())
+        },
+        ondeleteProduct: id => {
+            dispatch(Action.actDeleteProductRequest(id))
         }
     }
 }
