@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import callAPI from './../../utils/apiCaller';
 import * as Endpoint from "./../../constants/endpoints";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import * as Action from "./../../actions/index";
 
 class ProductActionPage extends Component {
     constructor(props) {
@@ -56,13 +58,8 @@ class ProductActionPage extends Component {
                     history.goBack()
                 }).catch(err => console.log(err))
             } else {//otherwise add product to backend
-                callAPI('POST', `${Endpoint.PRODUCTS}`, {
-                    name,
-                    price,
-                    status
-                }).then(data => {
-                    history.goBack();
-                }).catch(err => console.log('error'))
+                this.props.onAddProduct(this.state);
+                history.goBack();
             }
         }
     }
@@ -119,4 +116,12 @@ class ProductActionPage extends Component {
     }
 }
 
-export default ProductActionPage;
+const mapDispatchToProp = (dispatch, prop) => {
+    return {
+        onAddProduct: product => {
+            dispatch(Action.actAddProductRequest(product))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProp)(ProductActionPage);

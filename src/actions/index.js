@@ -36,4 +36,21 @@ const actDeleteProductRequest = id => {
     }
 }
 
-export { actFetchProductRequest, actDeleteProductRequest };
+const actAddProduct = product => {
+    return {
+        type: ActionType.ADD_PRODUCT,
+        product
+    }
+}
+
+const actAddProductRequest = product => {
+    return dispatch => {
+        return callAPI('POST', `${Endpoints.PRODUCTS}`, product)
+            .then(res => {
+                //call dispatch redux reducer
+                dispatch(actAddProduct(product))
+            }).catch(err => console.log(err))
+    }
+}
+
+export { actFetchProductRequest, actDeleteProductRequest, actAddProductRequest };

@@ -16,6 +16,10 @@ const products = (state = initialState, action) => {
             });
             if (index !== -1) state.splice(index, 1);
             return [...state];
+        case ActionType.ADD_PRODUCT:
+            let product = action.product;
+            state.push(product);
+            return [...state];
         default:
             return [...state];
     }
