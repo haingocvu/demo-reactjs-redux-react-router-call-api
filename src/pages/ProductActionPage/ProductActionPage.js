@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import callAPI from './../../utils/apiCaller';
-import * as Endpoint from "./../../constants/endpoints";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import * as Action from "./../../actions/index";
@@ -21,16 +19,19 @@ class ProductActionPage extends Component {
         if (match) {
             let { id } = match.params;
             //get product info when edit product
-            callAPI('GET', `${Endpoint.PRODUCTS}/${id}`, null)
-                .then(res => {
-                    this.setState({
-                        id: res.data.id,
-                        name: res.data.name,
-                        price: res.data.price,
-                        status: res.data.status
-                    })
-                })
-                .catch(err => console.log(err))
+            this.props.onGetProduct(id);
+        }
+    }
+
+    componentWillReceiveProps(nextProp) {
+        if (nextProp && nextProp.editingItem) {
+            let { editingItem } = nextProp;
+            this.setState({
+                id: editingItem.id,
+                name: editingItem.name,
+                price: editingItem.price,
+                status: editingItem.status
+            })
         }
     }
 
@@ -50,13 +51,8 @@ class ProductActionPage extends Component {
         if (name && price && (status || status === false)) {
             //check if existsed id, then edit product
             if (id) {
-                callAPI('PUT', `${Endpoint.PRODUCTS}/${id}`, {
-                    name,
-                    price,
-                    status
-                }).then(res => {
-                    history.goBack()
-                }).catch(err => console.log(err))
+                this.props.onUpdateProduct(this.state)
+                history.goBack();
             } else {//otherwise add product to backend
                 this.props.onAddProduct(this.state);
                 history.goBack();
@@ -116,12 +112,24 @@ class ProductActionPage extends Component {
     }
 }
 
+const mapStateToProp = state => {
+    return {
+        editingItem: state.editingItem
+    }
+}
+
 const mapDispatchToProp = (dispatch, prop) => {
     return {
         onAddProduct: product => {
             dispatch(Action.actAddProductRequest(product))
+        },
+        onGetProduct: id => {
+            dispatch(Action.actGetProductRequest(id))
+        },
+        onUpdateProduct: product => {
+            dispatch(Action.actUpdateProductRequest(product))
         }
     }
 }
 
-export default connect(null, mapDispatchToProp)(ProductActionPage);
+export default connect(mapStateToProp, mapDispatchToProp)(ProductActionPage);

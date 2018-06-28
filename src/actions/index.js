@@ -48,9 +48,45 @@ const actAddProductRequest = product => {
         return callAPI('POST', `${Endpoints.PRODUCTS}`, product)
             .then(res => {
                 //call dispatch redux reducer
-                dispatch(actAddProduct(product))
+                dispatch(actAddProduct(res.data))
             }).catch(err => console.log(err))
     }
 }
 
-export { actFetchProductRequest, actDeleteProductRequest, actAddProductRequest };
+const actGetProductRequest = id => {
+    return dispatch => {
+        callAPI('GET', `${Endpoints.PRODUCTS}/${id}`, null)
+            .then(res => {
+                dispatch(actSetEditingProductToStore(res.data))
+            }).catch(err => console.log(err))
+    }
+}
+
+const actSetEditingProductToStore = product => {
+    return {
+        type: ActionType.SET_EDITING_PRODUCT,
+        product
+    }
+}
+
+const actUpdateProduct = product => {
+    return {
+        type: ActionType.EDIT_PRODUCT,
+        product
+    }
+}
+
+const actUpdateProductRequest = product => {
+    return dispatch => {
+        return callAPI('PUT', `${Endpoints.PRODUCTS}/${product.id}`, product)
+            .then(res => {
+                //call update product redux store
+                dispatch(actUpdateProduct(res.data))
+            }).catch(err => console.log(err))
+    }
+}
+
+export {
+    actFetchProductRequest, actDeleteProductRequest,
+    actAddProductRequest, actGetProductRequest, actUpdateProductRequest
+};

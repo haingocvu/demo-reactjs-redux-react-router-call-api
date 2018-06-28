@@ -7,12 +7,6 @@ import { Link } from "react-router-dom";
 import * as Action from "./../../actions/index";
 
 class ProductListPage extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            products: []
-        }
-    }
 
     componentDidMount() {
         this.props.onFetchProductsToReduxState();
